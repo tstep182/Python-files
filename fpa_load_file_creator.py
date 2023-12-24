@@ -1220,7 +1220,7 @@ def get_input_files():
     finstmt_backup = Alteryx.read("#13")
     input_files['BACKUP'] = finstmt_backup
 	
-	# Get the file containing the list of capacity accounts
+    # Get the file containing the list of capacity accounts
     capacity_accounts = Alteryx.read("#14")
     input_files['CAPACITY_ACCOUNTS'] = capacity_accounts
 
