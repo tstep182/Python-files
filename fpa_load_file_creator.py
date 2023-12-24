@@ -1238,7 +1238,7 @@ def main():
     
         print("Running main...")
 
-        input_files = get_input_files()  # A dictionary is returned; contains all of the dim files and the FIN_STMT backup file
+        input_files = get_input_files()  # A dictionary is returned that contains all 14 files defined in get_input_files()
         df = input_files['LOADSHEET']
         finstmt_backup = input_files['BACKUP']
 		capacity_accounts = input_files['CAPACITY_ACCOUNTS']  # This corresponds to the list of accounts generated in the MXL_CurrCapacity2Wkg calc script
@@ -1246,7 +1246,7 @@ def main():
         # Get summary information about the load from the FileName and UserEmail fields
         # Info will include the user's eID and email address, the name of the workbook, and the name of the load sheet
         # Note1: The email address is formatted as e12345@wnco.com
-        # Note2: The FileName field contains the full path to the load file
+        # Note2: The FileName field contains the full path to the analyst's Excel file
         summary_info = summary_information(df)  # The info will be returned in a dictionary
         user_id = summary_info.get('user_id', '')
         user_email = summary_info.get('user_email', '')
