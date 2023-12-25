@@ -34,7 +34,7 @@ print('Python version running on the Alteryx server:')
 print(sys.version_info)
 
 print('Pandas version running on the Alteryx server:')
-print(pd.__version__) # Get the pandas version running on the Alteryx server
+print(pd.__version__)
 
 
 # Get the current date and time to append to the output file names
