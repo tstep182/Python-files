@@ -1014,14 +1014,18 @@ class DataLoader:
         if all(self.df['VER'].isin(['Current Capacity'])):
             if all(self.df['CC'].isin(['CC:40001','Non Operating (40001)'])):
                 self.df['FileName'] = 'CurrentCapacity_Load_FleetOnly_' + self.workbook_name + '_' + str(current_datetime)
+		load_flag_value = 2 
             else:
                 self.df['FileName'] = 'CurrentCapacity_Load_' + self.workbook_name + '_' + str(current_datetime)
+		load_flag_value = 1
         elif all(self.df['SCEN'].isin(['Actual'])):
             # Actual_Load_ (these are the monthly ExTO adjustments)
             self.df['FileName'] = 'Actual_Load_' + self.workbook_name + '_' + str(current_datetime)
+	    load_flag_value = 0
         else:
             # Working_Load_
             self.df['FileName'] = 'Working_Load_' + self.user_id + '_' + self.workbook_name + '_' + self.load_sheet_name + '_' + str(current_datetime)
+	    load_flag_value = 0
 
         # Embed the backup data into the load file (as a new column that will be ignored by the load rule)
         #if not all(self.df['VER'].isin(['Current Capacity'])):  As of 4/26/22, capacity load files will have the new column too
@@ -1074,21 +1078,9 @@ class DataLoader:
         # For capacity loads only, create a flag file that indicates which months to load
         # It's written to the same directory as the capacity data file and uses the same load rule
         # The values loaded from this flag file will be referenced when the capacity calc scripts are run
-        if all(self.df['VER'].isin(['Current Capacity'])):  # Ensure ALL values in the VER column are 'Current Capacity'
-            if all(self.df['CC'].isin(['CC:40001','Non Operating (40001)'])):
-                load_flag_value = 2 # Fleet-only load
-            else:
-                load_flag_value = 1 # Stations and fleet load
+	# Note: load_flag_value was set in the previous if block
+        if load_flag_value == 1 or load_flag_value == 2: 
             capacity_load_flags = self.create_capacity_flag_file(unique_periods,'Current Capacity',load_flag_value)
-            Alteryx.write(capacity_load_flags,2)
-            logging.info(r"Capacity flag file written to \\disk23\fin_plan-shared\Automation-FPA\Load_Files\Output")
-            print('Capacity flag file created')
-        elif all(self.df['ACCT'].isin(capacity_accounts)): # Ensure ALL values in the ACCT column are capacity accounts
-            if all(self.df['CC'].isin(['CC:40001','Non Operating (40001)'])):
-                load_flag_value = 2
-            else:
-                load_flag_value = 1
-            capacity_load_flags = self.create_capacity_flag_file(unique_periods,'Working',load_flag_value)
             Alteryx.write(capacity_load_flags,2)
             logging.info(r"Capacity flag file written to \\disk23\fin_plan-shared\Automation-FPA\Load_Files\Output")
             print('Capacity flag file created')
@@ -1220,10 +1212,6 @@ def get_input_files():
     finstmt_backup = Alteryx.read("#13")
     input_files['BACKUP'] = finstmt_backup
 	
-    # Get the file containing the list of capacity accounts
-    capacity_accounts = Alteryx.read("#14")
-    input_files['CAPACITY_ACCOUNTS'] = capacity_accounts
-
     print("All input files have been imported")
 
     return input_files
@@ -1241,7 +1229,6 @@ def main():
         input_files = get_input_files()  # A dictionary is returned that contains all 14 files defined in get_input_files()
         df = input_files['LOADSHEET']
         finstmt_backup = input_files['BACKUP']
-	capacity_accounts = input_files['CAPACITY_ACCOUNTS']  # This corresponds to the list of accounts generated in the MXL_CurrCapacity2Wkg calc script
 
         # Get summary information about the load from the FileName and UserEmail fields
         # Info will include the user's eID and email address, the name of the workbook, and the name of the load sheet
