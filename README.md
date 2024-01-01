@@ -1,3 +1,11 @@
-This Python script (which runs within an interactive Alteryx workflow) takes an FP&A analyst's Excel workbook containing forecast updates, validates it, and transforms it into a text file that is loaded into an Essbase cube through an automated batch process. A confirmation email is automatically sent to the analyst upon the creation of the load file.
+For the benefit of the financial analysts in the FP&A department, I built an interactive Alteryx workflow that runs a Python script that does the following:
 
-If the validation fails, the analyst is automatically emailed a list of issues that must be fixed. A partial load file will not be created. 
+• Imports an analyst's Excel workbook containing forecast updates
+
+• Validates and standardizes the metadata on the worksheet the analyst selects to load
+
+• Transforms the sheet into a custom-formatted text file that's loaded into Essbase through an automated batch process
+ 
+• Sends an automated confirmation email to the analyst upon the creation of the text file
+
+• If the validation fails, an automated email containing the list of issues that must be fixed is sent to the analyst
