@@ -1,4 +1,4 @@
-I built an interactive Alteryx workflow (pictured below) for the financial analysts in the FP&A department that runs a Python script (GitHub link provided below) that does the following:
+I built an interactive Alteryx workflow for the financial analysts in the FP&A department that runs a Python script that does the following:
 
 • Imports an analyst's Excel workbook containing forecast updates
 
